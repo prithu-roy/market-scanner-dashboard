@@ -150,6 +150,10 @@
         .resistance { color: #ef4444; }
         
         .hidden { display: none; }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
         .section-title {
             font-size: 1.3rem;
             margin-bottom: 15px;
@@ -171,37 +175,57 @@
         
         <!-- MARCH 16 REPORT -->
         <div id="mar16" class="tab-content">
+            <div class="card" style="margin-bottom: 20px;">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="background: #ef4444; width: 12px; height: 12px; border-radius: 50%; animation: pulse 2s infinite;"></div>
+                    <div style="flex: 1;">
+                        <div style="font-weight: 600; font-size: 1.1rem;">🚨 UBS Downgrades US Equities to "Benchmark"</div>
+                        <div style="color: #94a3b8; font-size: 0.85rem; margin-top: 5px;">CAPE ratio ~40 (dot-com bubble peak was 44.2) | Dollar weakening forecast</div>
+                    </div>
+                    <span style="color: #ef4444; font-weight: 600;">BEARISH</span>
+                </div>
+            </div>
+            
             <div class="grid">
                 <div>
                     <div class="card">
-                        <h2>🚨 Major Market News</h2>
-                        <div class="news-item bearish">
-                            <strong>UBS Downgrades US Equities to "Benchmark"</strong><br>
-                            <small>Key concerns: Dollar weakening, extreme valuations (CAPE ~40), corporate buybacks lost edge</small>
-                        </div>
-                        <div class="news-item bearish">
-                            <strong>Fed Uncertainty Escalating - Kevin Warsh Nominated</strong><br>
-                            <small>Wants to reduce Fed's $6T bond holdings, higher long-term rates pressure growth stocks</small>
-                        </div>
-                        <div class="news-item bearish">
-                            <strong>Geopolitical Risk - War with Iran</strong><br>
-                            <small>Middle East conflict creating market volatility</small>
+                        <h2>📈 Today's Top Movers</h2>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
+                            <div class="mover" style="background: #22c55e15; border-left: 3px solid #22c55e;">
+                                <span class="ticker">BLK</span>
+                                <span class="up">+2.07%</span>
+                            </div>
+                            <div class="mover" style="background: #22c55e15; border-left: 3px solid #22c55e;">
+                                <span class="ticker">NKE</span>
+                                <span class="up">+1.50%</span>
+                            </div>
+                            <div class="mover" style="background: #22c55e15; border-left: 3px solid #22c55e;">
+                                <span class="ticker">STLA</span>
+                                <span class="up">+1.08%</span>
+                            </div>
+                            <div class="mover" style="background: #22c55e15; border-left: 3px solid #22c55e;">
+                                <span class="ticker">GM</span>
+                                <span class="up">+0.77%</span>
+                            </div>
+                            <div class="mover" style="background: #ef444415; border-left: 3px solid #ef4444;">
+                                <span class="ticker">CL=F</span>
+                                <span class="down">-4.94%</span>
+                            </div>
                         </div>
                     </div>
                     
                     <div class="card">
-                        <h2>📅 Upcoming Earnings</h2>
+                        <h2>📅 Earnings Calendar (Next 10 Days)</h2>
                         <table>
                             <thead>
                                 <tr><th>Date</th><th>Ticker</th><th>Call</th><th>Catalyst</th></tr>
                             </thead>
                             <tbody>
+                                <tr><td>Mar 17</td><td>DLTR</td><td><span class="tag bullish">Beat</span></td><td>$2.53 EPS, +1.13% surprise</td></tr>
                                 <tr><td>Mar 19</td><td>FDX</td><td><span class="tag bearish">Bearish</span></td><td>Shipping slowdown</td></tr>
-                                <tr><td>Mar 20</td><td>BBY</td><td><span class="tag bullish">Bullish</span></td><td>Consumer electronics</td></tr>
-                                <tr><td>Mar 24</td><td>LMT</td><td><span class="tag bullish">Bullish</span></td><td>Government spend</td></tr>
-                                <tr><td>Mar 25</td><td>NKE</td><td><span class="tag bearish">Bearish</span></td><td>China demand weak</td></tr>
-                                <tr><td>Mar 27</td><td>MU</td><td><span class="tag bullish">Bullish</span></td><td>AI memory demand</td></tr>
-                                <tr><td>Apr 2</td><td>AAPL</td><td><span class="tag bullish">Bullish</span></td><td>Services growth</td></tr>
+                                <tr><td>Mar 20</td><td>BBY</td><td><span class="tag bullish">Bullish</span></td><td>Consumer electronics demand</td></tr>
+                                <tr><td>Mar 24</td><td>LMT</td><td><span class="tag bullish">Bullish</span></td><td>Defense spend tailwind</td></tr>
+                                <tr><td>Mar 27</td><td>MU</td><td><span class="tag bullish">Bullish</span></td><td>AI memory demand strong</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -209,36 +233,42 @@
                 
                 <div>
                     <div class="card">
-                        <h2>📈 Today's Movers</h2>
-                        <div class="mover"><span class="ticker">BLK</span><span class="up">+2.07%</span></div>
-                        <div class="mover"><span class="ticker">NKE</span><span class="up">+1.50%</span></div>
-                        <div class="mover"><span class="ticker">STLA</span><span class="up">+1.08%</span></div>
-                        <div class="mover"><span class="ticker">GM</span><span class="up">+0.77%</span></div>
-                        <div class="mover"><span class="ticker">ITW</span><span class="up">+0.62%</span></div>
-                        <div class="mover"><span class="ticker">CL=F</span><span class="down">-4.94%</span></div>
-                    </div>
-                    
-                    <div class="card">
-                        <h2>📊 Key Index Levels</h2>
+                        <h2>📊 Index Levels</h2>
                         <div class="index-card">
                             <div class="name">S&P 500</div>
-                            <div class="level">~5,800</div>
+                            <div class="level">5,800</div>
                             <div class="levels"><span class="support">S: 5,650</span> | <span class="resistance">R: 5,900</span></div>
                         </div>
                         <div class="index-card">
                             <div class="name">NASDAQ</div>
-                            <div class="level">~18,500</div>
+                            <div class="level">18,500</div>
                             <div class="levels"><span class="support">S: 18,000</span> | <span class="resistance">R: 19,000</span></div>
                         </div>
                         <div class="index-card">
                             <div class="name">DOW</div>
-                            <div class="level">~42,000</div>
+                            <div class="level">42,000</div>
                             <div class="levels"><span class="support">S: 41,500</span> | <span class="resistance">R: 43,000</span></div>
                         </div>
                         <div class="index-card">
                             <div class="name">VIX</div>
-                            <div class="level">~18</div>
+                            <div class="level">18.0</div>
                             <div class="levels"><span class="support">S: 15</span> | <span class="resistance">R: 22</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h2>🎯 Sector Rotation</h2>
+                        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px;">
+                            <span class="tag" style="background: #22c55e20; color: #22c55e;">Utilities</span>
+                            <span class="tag" style="background: #22c55e20; color: #22c55e;">Healthcare</span>
+                            <span class="tag" style="background: #ef444420; color: #ef4444;">Growth Tech</span>
+                            <span class="tag" style="background: #22c55e20; color: #22c55e;">Munis</span>
+                            <span class="tag" style="background: #22c55e20; color: #22c55e;">High-quality Bonds</span>
+                        </div>
+                        <div style="margin-top: 20px; padding: 12px; background: #0f172a; border-radius: 8px;">
+                            <div style="font-size: 0.85rem; color: #94a3b8;">
+                                <strong>Rotation:</strong> Inflow to defensive sectors. Small-cap value potentially benefits if Warsh policies implement.
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -250,7 +280,7 @@
                     <div class="rec-card bullish">
                         <span class="ticker">MU</span>
                         <span class="direction">🐂 BULLISH</span>
-                        <span class="reason">AI memory demand strong</span>
+                        <span class="reason">AI memory demand strong, HBM expansion</span>
                     </div>
                     <div class="rec-card bullish">
                         <span class="ticker">LMT</span>
@@ -260,17 +290,22 @@
                     <div class="rec-card bullish">
                         <span class="ticker">AAPL</span>
                         <span class="direction">🐂 BULLISH</span>
-                        <span class="reason">Services growth</span>
+                        <span class="reason">Services growth, underweight vs risk</span>
+                    </div>
+                    <div class="rec-card bullish">
+                        <span class="ticker">SMV</span>
+                        <span class="direction">🐂 BULLISH</span>
+                        <span class="reason">Small-cap value, rate differential play</span>
                     </div>
                     <div class="rec-card bearish">
                         <span class="ticker">NKE</span>
                         <span class="direction">🐻 BEARISH</span>
-                        <span class="reason">China demand weak</span>
+                        <span class="reason">China demand weak, inventory issues</span>
                     </div>
                     <div class="rec-card bearish">
                         <span class="ticker">TSLA</span>
                         <span class="direction">🐻 BEARISH</span>
-                        <span class="reason">Thiel exit signal</span>
+                        <span class="reason">Thiel exit signal, valuation stretched</span>
                     </div>
                 </div>
             </div>
