@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌐 Dashboard Home</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+        }
+        .container { 
+            max-width: 800px; 
+            margin: 0 auto; 
+            padding: 40px 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #3b82f6, #a855f7, #10b981);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+        .header p { color: #94a3b8; font-size: 1.1rem; }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+        }
+        .card {
+            background: #1e293b;
+            border-radius: 16px;
+            padding: 30px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .card .icon { font-size: 3.5rem; margin-bottom: 15px; }
+        .card h2 { font-size: 1.4rem; margin-bottom: 10px; }
+        .card p { color: #94a3b8; font-size: 0.9rem; margin-bottom: 15px; }
+        
+        .card.stock { border: 2px solid #3b82f6; }
+        .card.tech { border: 2px solid #a855f7; }
+        .card.personal { border: 2px solid #10b981; }
+        
+        .card button {
+            background: transparent;
+            border: 1px solid currentColor;
+            color: inherit;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+        .card.stock button { color: #3b82f6; }
+        .card.tech button { color: #a855f7; }
+        .card.personal button { color: #10b981; }
+        
+        .card button:hover { background: rgba(255,255,255,0.1); }
+        
+        .card.stock:hover { box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3); }
+        .card.tech:hover { box-shadow: 0 10px 30px rgba(168, 85, 247, 0.3); }
+        .card.personal:hover { box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3); }
+        
+        .footer {
+            text-align: center;
+            margin-top: 60px;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌐 Your Dashboards</h1>
+            <p>Powered by OpenClaw & GitHub Pages</p>
+        </div>
+        
+        <div class="dashboard-grid">
+            <div class="card stock">
+                <div class="icon">📊</div>
+                <h2>Market Scanner</h2>
+                <p>Daily stock scans, earnings reports & trades</p>
+                <button onclick="location.href='dashboard.html'">Open Dashboard</button>
+            </div>
+            
+            <div class="card tech">
+                <div class="icon">💻</div>
+                <h2>Tech Dashboard</h2>
+                <p>AR/VR, photonics, biosensors & AI</p>
+                <button onclick="location.href='tech-dashboard.html'">Open Dashboard</button>
+            </div>
+            
+            <div class="card personal">
+                <div class="icon">✅</div>
+                <h2>Personal Tasks</h2>
+                <p>Agenda, routine & daily priorities</p>
+                <button onclick="location.href='personal-dashboard.html'">Open Dashboard</button>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Auto-updated from cloud cron jobs • Last updated: <span id="date"></span></p>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('date').textContent = new Date().toLocaleDateString('en-US', {
+            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+        });
+    </script>
+</body>
+</html>

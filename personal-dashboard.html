@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✅ Personal Tasks</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+        }
+        .header {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 { font-size: 1.8rem; }
+        .date-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        
+        .card {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .card h2 {
+            font-size: 1.1rem;
+            color: #94a3b8;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #334155;
+        }
+        
+        .section { margin-bottom: 25px; }
+        .section h3 { color: #10b981; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        
+        .task-list { list-style: none; }
+        .task {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            background: #0f172a;
+            border-radius: 8px;
+            margin: 8px 0;
+            border-left: 3px solid #10b981;
+        }
+        .task.priority { border-left-color: #f59e0b; }
+        .task.done { border-left-color: #22c55e; opacity: 0.7; }
+        
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #10b981;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .checkbox.checked { background: #10b981; }
+        .checkbox.checked::after { content: "✓"; color: #0f172a; font-size: 14px; }
+        
+        .task-content { flex: 1; }
+        .task-title { font-weight: 500; }
+        .task-meta { font-size: 0.8rem; color: #94a3b8; margin-top: 3px; }
+        
+        .tag {
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .tag.high { background: #ef444420; color: #ef4444; }
+        .tag.medium { background: #f59e0b20; color: #f59e0b; }
+        .tag.low { background: #22c55e20; color: #22c55e; }
+        
+        .agenda {
+            background: #0f172a;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .agenda-item {
+            display: flex;
+            padding: 12px 15px;
+            border-bottom: 1px solid #334155;
+        }
+        .agenda-item:last-child { border-bottom: none; }
+        .agenda-time {
+            min-width: 80px;
+            color: #10b981;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .agenda-content { color: #e2e8f0; }
+        
+        .routine-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        .routine-card {
+            background: #0f172a;
+            padding: 15px;
+            border-radius: 10px;
+        }
+        .routine-card h4 { color: #10b981; margin-bottom: 10px; }
+        .routine-card ul { padding-left: 18px; color: #94a3b8; }
+        .routine-card li { margin: 5px 0; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>✅ Personal Tasks & Agenda</h1>
+        <span class="date-badge" id="currentDate"></span>
+    </div>
+    
+    <div class="container">
+        <div class="card">
+            <h2>🎯 Today's Priorities</h2>
+            <ul class="task-list">
+                <li class="task priority">
+                    <div class="checkbox"></div>
+                    <div class="task-content">
+                        <div class="task-title">Review market scanner dashboard</div>
+                        <div class="task-meta">Stock Reports • Morning</div>
+                    </div>
+                    <span class="tag high">HIGH</span>
+                </li>
+                <li class="task priority">
+                    <div class="checkbox"></div>
+                    <div class="task-content">
+                        <div class="task-title">Check upcoming earnings (Mar 17-19)</div>
+                        <div class="task-meta">Stocks • FDX, BBY, LMT</div>
+                    </div>
+                    <span class="tag high">HIGH</span>
+                </li>
+                <li class="task">
+                    <div class="checkbox"></div>
+                    <div class="task-content">
+                        <div class="task-title">Review tech field updates</div>
+                        <div class="task-meta">AR/VR, Biosensors</div>
+                    </div>
+                    <span class="tag medium">MED</span>
+                </li>
+                <li class="task">
+                    <div class="checkbox"></div>
+                    <div class="task-content">
+                        <div class="task-title">Update GitHub dashboards</div>
+                        <div class="task-meta">Automation</div>
+                    </div>
+                    <span class="tag low">LOW</span>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="card">
+            <h2>📅 Today's Agenda</h2>
+            <div class="agenda">
+                <div class="agenda-item">
+                    <div class="agenda-time">Morning</div>
+                    <div class="agenda-content">Review market reports & earnings calendar</div>
+                </div>
+                <div class="agenda-item">
+                    <div class="agenda-time">Mid-day</div>
+                    <div class="agenda-content">Tech industry news scan</div>
+                </div>
+                <div class="agenda-item">
+                    <div class="agenda-time">Evening</div>
+                    <div class="agenda-content">Prepare next day's scan setup</div>
+                </div>
+                <div class="agenda-item">
+                    <div class="agenda-time">Weekly</div>
+                    <div class="agenda-content">Portfolio review & rebalancing check</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>🔄 Daily Routine</h2>
+            <div class="routine-grid">
+                <div class="routine-card">
+                    <h4>🌅 Morning (8-9 AM)</h4>
+                    <ul>
+                        <li>Check market open</li>
+                        <li>Review pre-market movers</li>
+                        <li>Scan earnings calendar</li>
+                    </ul>
+                </div>
+                <div class="routine-card">
+                    <h4>📊 Mid-day (12-1 PM)</h4>
+                    <ul>
+                        <li>Check news catalysts</li>
+                        <li>Review sector rotation</li>
+                        <li>Update watchlist</li>
+                    </ul>
+                </div>
+                <div class="routine-card">
+                    <h4>🌙 Evening (6-7 PM)</h4>
+                    <ul>
+                        <li>Run daily scan</li>
+                        <li>Update dashboards</li>
+                        <li>Plan next day</li>
+                    </ul>
+                </div>
+                <div class="routine-card">
+                    <h4>📅 Weekly</h4>
+                    <ul>
+                        <li>Portfolio review</li>
+                        <li>Sector analysis</li>
+                        <li>Rebalance check</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>📝 Notes</h2>
+            <div style="background: #0f172a; padding: 15px; border-radius: 8px; color: #94a3b8;">
+                <p>• Fed meeting March 18-19 - watch for rate decisions</p>
+                <p>• MU earnings March 27 - AI memory play</p>
+                <p>• Configure Brave Search API for better data</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', {
+            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+        });
+        
+        // Simple checkbox toggle
+        document.querySelectorAll('.checkbox').forEach(cb => {
+            cb.addEventListener('click', () => cb.classList.toggle('checked'));
+        });
+    </script>
+</body>
+</html>
