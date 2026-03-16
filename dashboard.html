@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📊 Market Scanner Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+        }
+        .header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 { font-size: 1.8rem; }
+        .date-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .tab {
+            background: #1e293b;
+            border: none;
+            color: #94a3b8;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+        .tab.active {
+            background: #3b82f6;
+            color: white;
+        }
+        .tab:hover:not(.active) { background: #334155; }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+        .card {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .card h2 {
+            font-size: 1.1rem;
+            color: #94a3b8;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #334155;
+        }
+        .news-item {
+            padding: 12px;
+            margin: 8px 0;
+            background: #0f172a;
+            border-radius: 8px;
+            border-left: 4px solid;
+        }
+        .news-item.bearish { border-left-color: #ef4444; }
+        .news-item.bullish { border-left-color: #22c55e; }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #334155;
+        }
+        th { color: #94a3b8; font-weight: 500; }
+        
+        .tag {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .tag.bullish { background: #22c55e20; color: #22c55e; }
+        .tag.bearish { background: #ef444420; color: #ef4444; }
+        .tag.caution { background: #f59e0b20; color: #f59e0b; }
+        
+        .mover {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            margin: 5px 0;
+            background: #0f172a;
+            border-radius: 6px;
+        }
+        .mover .ticker { font-weight: bold; }
+        .mover .up { color: #22c55e; }
+        .mover .down { color: #ef4444; }
+        
+        .rec-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        .rec-card {
+            background: #0f172a;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .rec-card .ticker {
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .rec-card .direction { font-size: 0.9rem; margin-bottom: 5px; }
+        .rec-card .reason { font-size: 0.8rem; color: #94a3b8; }
+        
+        .rec-card.bullish .ticker { color: #22c55e; }
+        .rec-card.bearish .ticker { color: #ef4444; }
+        
+        .index-card {
+            background: #0f172a;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        .index-card .name { color: #94a3b8; font-size: 0.9rem; }
+        .index-card .level { font-size: 1.3rem; font-weight: bold; margin: 5px 0; }
+        .index-card .levels { font-size: 0.85rem; }
+        .support { color: #22c55e; }
+        .resistance { color: #ef4444; }
+        
+        .hidden { display: none; }
+        .section-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #e2e8f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📊 Market Scanner Dashboard</h1>
+        <span class="date-badge" id="currentDate"></span>
+    </div>
+    
+    <div class="container">
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('mar16')">March 16 Report</button>
+            <button class="tab" onclick="showTab('mar17')">March 17 Scan</button>
+        </div>
+        
+        <!-- MARCH 16 REPORT -->
+        <div id="mar16" class="tab-content">
+            <div class="grid">
+                <div>
+                    <div class="card">
+                        <h2>🚨 Major Market News</h2>
+                        <div class="news-item bearish">
+                            <strong>UBS Downgrades US Equities to "Benchmark"</strong><br>
+                            <small>Key concerns: Dollar weakening, extreme valuations (CAPE ~40), corporate buybacks lost edge</small>
+                        </div>
+                        <div class="news-item bearish">
+                            <strong>Fed Uncertainty Escalating - Kevin Warsh Nominated</strong><br>
+                            <small>Wants to reduce Fed's $6T bond holdings, higher long-term rates pressure growth stocks</small>
+                        </div>
+                        <div class="news-item bearish">
+                            <strong>Geopolitical Risk - War with Iran</strong><br>
+                            <small>Middle East conflict creating market volatility</small>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h2>📅 Upcoming Earnings</h2>
+                        <table>
+                            <thead>
+                                <tr><th>Date</th><th>Ticker</th><th>Call</th><th>Catalyst</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Mar 19</td><td>FDX</td><td><span class="tag bearish">Bearish</span></td><td>Shipping slowdown</td></tr>
+                                <tr><td>Mar 20</td><td>BBY</td><td><span class="tag bullish">Bullish</span></td><td>Consumer electronics</td></tr>
+                                <tr><td>Mar 24</td><td>LMT</td><td><span class="tag bullish">Bullish</span></td><td>Government spend</td></tr>
+                                <tr><td>Mar 25</td><td>NKE</td><td><span class="tag bearish">Bearish</span></td><td>China demand weak</td></tr>
+                                <tr><td>Mar 27</td><td>MU</td><td><span class="tag bullish">Bullish</span></td><td>AI memory demand</td></tr>
+                                <tr><td>Apr 2</td><td>AAPL</td><td><span class="tag bullish">Bullish</span></td><td>Services growth</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="card">
+                        <h2>📈 Today's Movers</h2>
+                        <div class="mover"><span class="ticker">BLK</span><span class="up">+2.07%</span></div>
+                        <div class="mover"><span class="ticker">NKE</span><span class="up">+1.50%</span></div>
+                        <div class="mover"><span class="ticker">STLA</span><span class="up">+1.08%</span></div>
+                        <div class="mover"><span class="ticker">GM</span><span class="up">+0.77%</span></div>
+                        <div class="mover"><span class="ticker">ITW</span><span class="up">+0.62%</span></div>
+                        <div class="mover"><span class="ticker">CL=F</span><span class="down">-4.94%</span></div>
+                    </div>
+                    
+                    <div class="card">
+                        <h2>📊 Key Index Levels</h2>
+                        <div class="index-card">
+                            <div class="name">S&P 500</div>
+                            <div class="level">~5,800</div>
+                            <div class="levels"><span class="support">S: 5,650</span> | <span class="resistance">R: 5,900</span></div>
+                        </div>
+                        <div class="index-card">
+                            <div class="name">NASDAQ</div>
+                            <div class="level">~18,500</div>
+                            <div class="levels"><span class="support">S: 18,000</span> | <span class="resistance">R: 19,000</span></div>
+                        </div>
+                        <div class="index-card">
+                            <div class="name">DOW</div>
+                            <div class="level">~42,000</div>
+                            <div class="levels"><span class="support">S: 41,500</span> | <span class="resistance">R: 43,000</span></div>
+                        </div>
+                        <div class="index-card">
+                            <div class="name">VIX</div>
+                            <div class="level">~18</div>
+                            <div class="levels"><span class="support">S: 15</span> | <span class="resistance">R: 22</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>🎯 High-Conviction Plays</h2>
+                <div class="rec-cards">
+                    <div class="rec-card bullish">
+                        <span class="ticker">MU</span>
+                        <span class="direction">🐂 BULLISH</span>
+                        <span class="reason">AI memory demand strong</span>
+                    </div>
+                    <div class="rec-card bullish">
+                        <span class="ticker">LMT</span>
+                        <span class="direction">🐂 BULLISH</span>
+                        <span class="reason">Defense spending tailwind</span>
+                    </div>
+                    <div class="rec-card bullish">
+                        <span class="ticker">AAPL</span>
+                        <span class="direction">🐂 BULLISH</span>
+                        <span class="reason">Services growth</span>
+                    </div>
+                    <div class="rec-card bearish">
+                        <span class="ticker">NKE</span>
+                        <span class="direction">🐻 BEARISH</span>
+                        <span class="reason">China demand weak</span>
+                    </div>
+                    <div class="rec-card bearish">
+                        <span class="ticker">TSLA</span>
+                        <span class="direction">🐻 BEARISH</span>
+                        <span class="reason">Thiel exit signal</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- MARCH 17 SCAN -->
+        <div id="mar17" class="tab-content hidden">
+            <div class="grid">
+                <div>
+                    <div class="card">
+                        <h2>📅 Earnings Tomorrow (March 17)</h2>
+                        <table>
+                            <thead>
+                                <tr><th>Ticker</th><th>Company</th><th>Market Cap</th><th>EPS Est</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>DLTR</td><td>Dollar Tree</td><td>$23.33B</td><td>$2.53</td></tr>
+                                <tr><td>SBS</td><td>Sabesp (Brazil)</td><td>$19.49B</td><td>$0.54</td></tr>
+                                <tr><td>BEKE</td><td>KE Holdings (China)</td><td>$19.26B</td><td>$0.74 ⚠️</td></tr>
+                                <tr><td>SMTC</td><td>Semtech</td><td>$8.24B</td><td>$0.43</td></tr>
+                                <tr><td>VFS</td><td>VinFast Auto</td><td>$7.07B</td><td>-$0.36 ⚠️</td></tr>
+                                <tr><td>SAIC</td><td>Science Applications</td><td>$4.28B</td><td>Pending</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="card">
+                        <h2>⚠️ Data Limitations</h2>
+                        <p style="color: #94a3b8; font-size: 0.9rem;">
+                            Yahoo Finance API rate-limited. Configure Brave Search API for better data.<br>
+                            Missing: Options flow, real-time news, technical levels, sector rotation.
+                        </p>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="card">
+                        <h2>🎯 Setup Alerts</h2>
+                        <div class="index-card">
+                            <div class="name">SMTC - Semtech</div>
+                            <div><span class="tag bearish">BEARISH</span></div>
+                            <div class="levels">Entry: $22.50-$24.00</div>
+                            <small style="color: #94a3b8;">Earnings risk + sector weakness</small>
+                        </div>
+                        <div class="index-card">
+                            <div class="name">SAIC - Science App</div>
+                            <div><span class="tag bullish">BULLISH</span></div>
+                            <div class="levels">Entry: $95-$98</div>
+                            <small style="color: #94a3b8;">+30% surprise, defense sector</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(tabId).classList.remove('hidden');
+            event.target.classList.add('active');
+        }
+        
+        document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', {
+            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+        });
+    </script>
+</body>
+</html>
