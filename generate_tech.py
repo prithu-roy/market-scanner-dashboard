@@ -1,4 +1,7 @@
-<!DOCTYPE html>
+#!/usr/bin/env python3
+# Generate upgraded tech dashboard
+
+html = '''<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -119,43 +122,63 @@
         <div class="card">
             <h2>🔧 Tech News (Scrollable)</h2>
             <div class="news-scroll">
-                <div class="tech-item">
-                    <h3>TSMC Announces 2nm Volume Production</h3>
-                    <span class="tag">Semiconductors</span>
-                    <p>Taiwan Semiconductor Manufacturing Co. announces successful volume production of its 2nm process node, attracting pre-orders from major AI and smartphone chip designers. Performance and efficiency gains expected to drive next-gen chips.</p>
-                    <div class="source">Source: <a href="https://www.tsmc.com/press_releases" target="_blank" rel="noopener">TSMC Press Release</a></div>
+'''
+
+tech_news = [
+    {
+        "title": "TSMC Announces 2nm Volume Production",
+        "category": "Semiconductors",
+        "details": "Taiwan Semiconductor Manufacturing Co. announces successful volume production of its 2nm process node, attracting pre-orders from major AI and smartphone chip designers. Performance and efficiency gains expected to drive next-gen chips.",
+        "source": "TSMC Press Release",
+        "url": "https://www.tsmc.com/press_releases"
+    },
+    {
+        "title": "Intel 18A Process Hits Milestones",
+        "category": "Semiconductors",
+        "details": "Intel's 'Intel 18A' process hits critical milestones, positioning the company as a credible contender for advanced foundry services. Market optimism surges for their roadmap.",
+        "source": "Intel",
+        "url": "https://www.intel.com/content/www/us/en/newsroom.html"
+    },
+    {
+        "title": "NVIDIA RTX 5090 Leaks Reveal Massive Performance Gains",
+        "category": "Hardware",
+        "details": "Upcoming NVIDIA Blackwell architecture shows 70% improvement in AI inference workloads. Gaming performance also expected to double over current generation.",
+        "source": "Tom's Hardware",
+        "url": "https://www.tomshardware.com/"
+    },
+    {
+        "title": "Apple Vision Pro Enterprise Expansion",
+        "category": "AR/VR",
+        "details": "Apple expands Vision Pro ecosystem with enterprise applications. Major Fortune 500 companies adopting spatial computing for training and design.",
+        "source": "Apple",
+        "url": "https://www.apple.com/newsroom/"
+    },
+    {
+        "title": "Google Gemini 2.5 Sets New LLM Benchmarks",
+        "category": "AI",
+        "details": "Google's latest Gemini model achieves state-of-the-art results across reasoning, coding, and multimodal benchmarks. Thinking mode shows improvedChain-of-thought capabilities.",
+        "source": "Google AI",
+        "url": "https://blog.google/technology/ai/"
+    },
+    {
+        "title": "ASML Reports Record EUV Backlog",
+        "category": "Semiconductors",
+        "details": "Global chip equipment giant ASML reports record backlog for High-NA EUV systems, indicating strong industry commitment to sub-2nm manufacturing despite geopolitical tensions.",
+        "source": "ASML",
+        "url": "https://www.asml.com/company/en/index"
+    }
+]
+
+for item in tech_news:
+    html += f'''                <div class="tech-item">
+                    <h3>{item['title']}</h3>
+                    <span class="tag">{item['category']}</span>
+                    <p>{item['details']}</p>
+                    <div class="source">Source: <a href="{item['url']}" target="_blank" rel="noopener">{item['source']}</a></div>
                 </div>
-                <div class="tech-item">
-                    <h3>Intel 18A Process Hits Milestones</h3>
-                    <span class="tag">Semiconductors</span>
-                    <p>Intel's 'Intel 18A' process hits critical milestones, positioning the company as a credible contender for advanced foundry services. Market optimism surges for their roadmap.</p>
-                    <div class="source">Source: <a href="https://www.intel.com/content/www/us/en/newsroom.html" target="_blank" rel="noopener">Intel</a></div>
-                </div>
-                <div class="tech-item">
-                    <h3>NVIDIA RTX 5090 Leaks Reveal Massive Performance Gains</h3>
-                    <span class="tag">Hardware</span>
-                    <p>Upcoming NVIDIA Blackwell architecture shows 70% improvement in AI inference workloads. Gaming performance also expected to double over current generation.</p>
-                    <div class="source">Source: <a href="https://www.tomshardware.com/" target="_blank" rel="noopener">Tom's Hardware</a></div>
-                </div>
-                <div class="tech-item">
-                    <h3>Apple Vision Pro Enterprise Expansion</h3>
-                    <span class="tag">AR/VR</span>
-                    <p>Apple expands Vision Pro ecosystem with enterprise applications. Major Fortune 500 companies adopting spatial computing for training and design.</p>
-                    <div class="source">Source: <a href="https://www.apple.com/newsroom/" target="_blank" rel="noopener">Apple</a></div>
-                </div>
-                <div class="tech-item">
-                    <h3>Google Gemini 2.5 Sets New LLM Benchmarks</h3>
-                    <span class="tag">AI</span>
-                    <p>Google's latest Gemini model achieves state-of-the-art results across reasoning, coding, and multimodal benchmarks. Thinking mode shows improvedChain-of-thought capabilities.</p>
-                    <div class="source">Source: <a href="https://blog.google/technology/ai/" target="_blank" rel="noopener">Google AI</a></div>
-                </div>
-                <div class="tech-item">
-                    <h3>ASML Reports Record EUV Backlog</h3>
-                    <span class="tag">Semiconductors</span>
-                    <p>Global chip equipment giant ASML reports record backlog for High-NA EUV systems, indicating strong industry commitment to sub-2nm manufacturing despite geopolitical tensions.</p>
-                    <div class="source">Source: <a href="https://www.asml.com/company/en/index" target="_blank" rel="noopener">ASML</a></div>
-                </div>
-            </div>
+'''
+
+html += '''            </div>
         </div>
         
         <div class="card">
@@ -271,3 +294,9 @@
     </div>
 </body>
 </html>
+'''
+
+with open('/home/node/.openclaw/workspace/tech-dashboard.html', 'w') as f:
+    f.write(html)
+
+print("✅ Tech dashboard updated successfully!")

@@ -1,4 +1,6 @@
-<!DOCTYPE html>
+#!/usr/bin/env python3
+
+html = '''<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -160,114 +162,60 @@
             <h2>🎯 Today's Priorities</h2>
             <div class="tasks-scroll">
                 <ul class="task-list">
-                    <li class="task high">
+'''
+
+priorities = [
+    {"title": "Complete Q1 Financial Report Draft", "meta": "Crucial deadline approaching for internal review", "priority": "high"},
+    {"title": "Follow up on insurance claim status", "meta": "Need to clarify submitted documents", "priority": "high"},
+    {"title": "Review 'Python for Data Science' Module 3", "meta": "Stay on track with personal learning goals", "priority": "medium"},
+    {"title": "Meal prep for Wednesday/Thursday", "meta": "Prepare healthy lunch/dinner to avoid eating out", "priority": "medium"},
+    {"title": "Check dashboard auto-update status", "meta": "Verify GitHub Pages deployment is working", "priority": "medium"},
+    {"title": "Water indoor plants", "meta": "They are looking a bit dry", "priority": "low"},
+    {"title": "Research new running shoes", "meta": "Old pair is worn out; explore options online", "priority": "low"}
+]
+
+for p in priorities:
+    html += f'''                    <li class="task {p['priority']}">
                         <div class="checkbox"></div>
                         <div class="task-content">
-                            <div class="task-title">Complete Q1 Financial Report Draft</div>
-                            <div class="task-meta">Crucial deadline approaching for internal review</div>
+                            <div class="task-title">{p['title']}</div>
+                            <div class="task-meta">{p['meta']}</div>
                         </div>
-                        <span class="tag high">HIGH</span>
+                        <span class="tag {p['priority']}">{p['priority'].upper()}</span>
                     </li>
-                    <li class="task high">
-                        <div class="checkbox"></div>
-                        <div class="task-content">
-                            <div class="task-title">Follow up on insurance claim status</div>
-                            <div class="task-meta">Need to clarify submitted documents</div>
-                        </div>
-                        <span class="tag high">HIGH</span>
-                    </li>
-                    <li class="task medium">
-                        <div class="checkbox"></div>
-                        <div class="task-content">
-                            <div class="task-title">Review 'Python for Data Science' Module 3</div>
-                            <div class="task-meta">Stay on track with personal learning goals</div>
-                        </div>
-                        <span class="tag medium">MEDIUM</span>
-                    </li>
-                    <li class="task medium">
-                        <div class="checkbox"></div>
-                        <div class="task-content">
-                            <div class="task-title">Meal prep for Wednesday/Thursday</div>
-                            <div class="task-meta">Prepare healthy lunch/dinner to avoid eating out</div>
-                        </div>
-                        <span class="tag medium">MEDIUM</span>
-                    </li>
-                    <li class="task medium">
-                        <div class="checkbox"></div>
-                        <div class="task-content">
-                            <div class="task-title">Check dashboard auto-update status</div>
-                            <div class="task-meta">Verify GitHub Pages deployment is working</div>
-                        </div>
-                        <span class="tag medium">MEDIUM</span>
-                    </li>
-                    <li class="task low">
-                        <div class="checkbox"></div>
-                        <div class="task-content">
-                            <div class="task-title">Water indoor plants</div>
-                            <div class="task-meta">They are looking a bit dry</div>
-                        </div>
-                        <span class="tag low">LOW</span>
-                    </li>
-                    <li class="task low">
-                        <div class="checkbox"></div>
-                        <div class="task-content">
-                            <div class="task-title">Research new running shoes</div>
-                            <div class="task-meta">Old pair is worn out; explore options online</div>
-                        </div>
-                        <span class="tag low">LOW</span>
-                    </li>
-                </ul>
+'''
+
+html += '''                </ul>
             </div>
         </div>
         
         <div class="card">
             <h2>📅 Today's Agenda</h2>
             <div class="agenda">
-                <div class="agenda-item">
-                    <div class="agenda-time">Morning</div>
-                    <div class="agenda-content">Wake up, morning routine, healthy breakfast</div>
+'''
+
+agenda = [
+    {"time": "Morning", "task": "Wake up, morning routine, healthy breakfast"},
+    {"time": "Morning", "task": "Deep work: Complete Q1 Financial Report draft"},
+    {"time": "Morning", "task": "Address critical work emails & communications"},
+    {"time": "Mid-day", "task": "Lunch break and 15-minute walk outside"},
+    {"time": "Mid-day", "task": "Call insurance company regarding claim update"},
+    {"time": "Mid-day", "task": "Learning time: Review Python Data Science Module 3"},
+    {"time": "Mid-day", "task": "Wrap remaining work, plan tomorrow"},
+    {"time": "Evening", "task": "End workday, transition to personal time"},
+    {"time": "Evening", "task": "Meal prep + water plants"},
+    {"time": "Evening", "task": "Research running shoes online"},
+    {"time": "Evening", "task": "Relax, read, prepare for bed"}
+]
+
+for a in agenda:
+    html += f'''                <div class="agenda-item">
+                    <div class="agenda-time">{a['time']}</div>
+                    <div class="agenda-content">{a['task']}</div>
                 </div>
-                <div class="agenda-item">
-                    <div class="agenda-time">Morning</div>
-                    <div class="agenda-content">Deep work: Complete Q1 Financial Report draft</div>
-                </div>
-                <div class="agenda-item">
-                    <div class="agenda-time">Morning</div>
-                    <div class="agenda-content">Address critical work emails & communications</div>
-                </div>
-                <div class="agenda-item">
-                    <div class="agenda-time">Mid-day</div>
-                    <div class="agenda-content">Lunch break and 15-minute walk outside</div>
-                </div>
-                <div class="agenda-item">
-                    <div class="agenda-time">Mid-day</div>
-                    <div class="agenda-content">Call insurance company regarding claim update</div>
-                </div>
-                <div class="agenda-item">
-                    <div class="agenda-time">Mid-day</div>
-                    <div class="agenda-content">Learning time: Review Python Data Science Module 3</div>
-                </div>
-                <div class="agenda-item">
-                    <div class="agenda-time">Mid-day</div>
-                    <div class="agenda-content">Wrap remaining work, plan tomorrow</div>
-                </div>
-                <div class="agenda-item">
-                    <div class="agenda-time">Evening</div>
-                    <div class="agenda-content">End workday, transition to personal time</div>
-                </div>
-                <div class="agenda-item">
-                    <div class="agenda-time">Evening</div>
-                    <div class="agenda-content">Meal prep + water plants</div>
-                </div>
-                <div class="agenda-item">
-                    <div class="agenda-time">Evening</div>
-                    <div class="agenda-content">Research running shoes online</div>
-                </div>
-                <div class="agenda-item">
-                    <div class="agenda-time">Evening</div>
-                    <div class="agenda-content">Relax, read, prepare for bed</div>
-                </div>
-            </div>
+'''
+
+html += '''            </div>
         </div>
         
         <div class="card">
@@ -312,13 +260,22 @@
         <div class="card">
             <h2>📝 Notes & Reminders</h2>
             <div class="notes-container">
-                <div class="note-item">Today is St. Patrick's Day - remember to wear something green if going out!</div>
-                <div class="note-item">Fed meeting March 18-19 - watch for rate decision announcements</div>
-                <div class="note-item">MU earnings March 27 - AI memory play, on watchlist</div>
-                <div class="note-item">Configure Brave Search API for better market data collection</div>
-                <div class="note-item">Stay hydrated throughout the day during deep work sessions</div>
-                <div class="note-item">Prioritize Q1 report: aim for solid draft before end of day</div>
-            </div>
+'''
+
+notes = [
+    "Today is St. Patrick's Day - remember to wear something green if going out!",
+    "Fed meeting March 18-19 - watch for rate decision announcements",
+    "MU earnings March 27 - AI memory play, on watchlist",
+    "Configure Brave Search API for better market data collection",
+    "Stay hydrated throughout the day during deep work sessions",
+    "Prioritize Q1 report: aim for solid draft before end of day"
+]
+
+for n in notes:
+    html += f'''                <div class="note-item">{n}</div>
+'''
+
+html += '''            </div>
         </div>
         
         <div class="footer-note">
@@ -334,3 +291,9 @@
     </script>
 </body>
 </html>
+'''
+
+with open('/home/node/.openclaw/workspace/personal-dashboard.html', 'w') as f:
+    f.write(html)
+
+print("✅ Personal dashboard updated successfully!")

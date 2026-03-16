@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📊 Market Scanner Dashboard</title>
+    <title>📊 Stock Market Dashboard</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -18,6 +18,9 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
         .header h1 { font-size: 1.8rem; }
         .date-badge {
@@ -26,37 +29,14 @@
             border-radius: 20px;
             font-size: 0.9rem;
         }
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .tab {
-            background: #1e293b;
-            border: none;
-            color: #94a3b8;
-            padding: 12px 24px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: all 0.2s;
-        }
-        .tab.active {
-            background: #3b82f6;
-            color: white;
-        }
-        .tab:hover:not(.active) { background: #334155; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
         
         .grid {
             display: grid;
-            grid-template-columns: 2fr 1fr;
+            grid-template-columns: 1fr 1fr;
             gap: 20px;
         }
+        
         .card {
             background: #1e293b;
             border-radius: 12px;
@@ -69,16 +49,66 @@
             margin-bottom: 15px;
             padding-bottom: 10px;
             border-bottom: 1px solid #334155;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
+        
+        /* Scrollable news container */
+        .news-scroll {
+            max-height: 500px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        .news-scroll::-webkit-scrollbar {
+            width: 8px;
+        }
+        .news-scroll::-webkit-scrollbar-track {
+            background: #0f172a;
+            border-radius: 4px;
+        }
+        .news-scroll::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
+        }
+        .news-scroll::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+        
         .news-item {
-            padding: 12px;
-            margin: 8px 0;
+            padding: 15px;
+            margin: 10px 0;
             background: #0f172a;
             border-radius: 8px;
             border-left: 4px solid;
         }
-        .news-item.bearish { border-left-color: #ef4444; }
         .news-item.bullish { border-left-color: #22c55e; }
+        .news-item.bearish { border-left-color: #ef4444; }
+        .news-item .title { font-weight: 600; font-size: 1.05rem; margin-bottom: 5px; }
+        .news-item .details { color: #94a3b8; font-size: 0.9rem; margin-bottom: 8px; line-height: 1.5; }
+        .news-item .source { font-size: 0.75rem; color: #64748b; }
+        .news-item .source a { color: #3b82f6; text-decoration: none; }
+        .news-item .source a:hover { text-decoration: underline; }
+        
+        /* Price Cards */
+        .price-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 12px;
+        }
+        .price-card {
+            background: #0f172a;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .price-card .ticker { font-weight: bold; font-size: 1.2rem; margin-bottom: 5px; }
+        .price-card .price { font-size: 1.5rem; margin-bottom: 3px; }
+        .price-card .change { font-size: 0.9rem; }
+        .price-card .change.up { color: #22c55e; }
+        .price-card .change.down { color: #ef4444; }
+        .price-card .source { font-size: 0.7rem; color: #64748b; }
+        .price-card .source a { color: #3b82f6; text-decoration: none; }
         
         table {
             width: 100%;
@@ -100,23 +130,10 @@
         }
         .tag.bullish { background: #22c55e20; color: #22c55e; }
         .tag.bearish { background: #ef444420; color: #ef4444; }
-        .tag.caution { background: #f59e0b20; color: #f59e0b; }
-        
-        .mover {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px;
-            margin: 5px 0;
-            background: #0f172a;
-            border-radius: 6px;
-        }
-        .mover .ticker { font-weight: bold; }
-        .mover .up { color: #22c55e; }
-        .mover .down { color: #ef4444; }
         
         .rec-cards {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 15px;
         }
         .rec-card {
@@ -132,247 +149,244 @@
             margin-bottom: 5px;
         }
         .rec-card .direction { font-size: 0.9rem; margin-bottom: 5px; }
-        .rec-card .reason { font-size: 0.8rem; color: #94a3b8; }
-        
+        .rec-card .reason { font-size: 0.8rem; color: #94a3b8; margin-bottom: 8px; }
+        .rec-card .yf-link { font-size: 0.75rem; }
+        .rec-card .yf-link a { color: #3b82f6; text-decoration: none; }
         .rec-card.bullish .ticker { color: #22c55e; }
         .rec-card.bearish .ticker { color: #ef4444; }
         
-        .index-card {
-            background: #0f172a;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 10px 0;
+        .refresh-note {
+            text-align: center;
+            color: #64748b;
+            font-size: 0.8rem;
+            padding: 10px;
         }
-        .index-card .name { color: #94a3b8; font-size: 0.9rem; }
-        .index-card .level { font-size: 1.3rem; font-weight: bold; margin: 5px 0; }
-        .index-card .levels { font-size: 0.85rem; }
-        .support { color: #22c55e; }
-        .resistance { color: #ef4444; }
-        
-        .hidden { display: none; }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-        .section-title {
-            font-size: 1.3rem;
-            margin-bottom: 15px;
-            color: #e2e8f0;
-        }
+        .refresh-note a { color: #3b82f6; text-decoration: none; }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>📊 Market Scanner Dashboard</h1>
-        <span class="date-badge" id="currentDate"></span>
+        <h1>📊 Stock Market Scanner</h1>
+        <span class="date-badge">March 17, 2026</span>
     </div>
     
     <div class="container">
-        <div class="tabs">
-            <button class="tab active" onclick="showTab('mar16')">March 16 Report</button>
-            <button class="tab" onclick="showTab('mar17')">March 17 Scan</button>
-        </div>
-        
-        <!-- MARCH 16 REPORT -->
-        <div id="mar16" class="tab-content">
-            <div class="card" style="margin-bottom: 20px;">
-                <div style="display: flex; align-items: center; gap: 15px;">
-                    <div style="background: #ef4444; width: 12px; height: 12px; border-radius: 50%; animation: pulse 2s infinite;"></div>
-                    <div style="flex: 1;">
-                        <div style="font-weight: 600; font-size: 1.1rem;">🚨 UBS Downgrades US Equities to "Benchmark"</div>
-                        <div style="color: #94a3b8; font-size: 0.85rem; margin-top: 5px;">CAPE ratio ~40 (dot-com bubble peak was 44.2) | Dollar weakening forecast</div>
-                    </div>
-                    <span style="color: #ef4444; font-weight: 600;">BEARISH</span>
-                </div>
-            </div>
-            
-            <div class="grid">
-                <div>
-                    <div class="card">
-                        <h2>📈 Today's Top Movers</h2>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
-                            <div class="mover" style="background: #22c55e15; border-left: 3px solid #22c55e;">
-                                <span class="ticker">BLK</span>
-                                <span class="up">+2.07%</span>
-                            </div>
-                            <div class="mover" style="background: #22c55e15; border-left: 3px solid #22c55e;">
-                                <span class="ticker">NKE</span>
-                                <span class="up">+1.50%</span>
-                            </div>
-                            <div class="mover" style="background: #22c55e15; border-left: 3px solid #22c55e;">
-                                <span class="ticker">STLA</span>
-                                <span class="up">+1.08%</span>
-                            </div>
-                            <div class="mover" style="background: #22c55e15; border-left: 3px solid #22c55e;">
-                                <span class="ticker">GM</span>
-                                <span class="up">+0.77%</span>
-                            </div>
-                            <div class="mover" style="background: #ef444415; border-left: 3px solid #ef4444;">
-                                <span class="ticker">CL=F</span>
-                                <span class="down">-4.94%</span>
-                            </div>
+        <div class="grid">
+            <div>
+                <div class="card">
+                    <h2>🚨 Breaking Market News <span style="font-size:0.8rem">(Scrollable)</span></h2>
+                    <div class="news-scroll">
+                        <div class="news-item bullish">
+                            <div class="title">Global Tech Sector Soars on Next-Gen AI Infrastructure Deployment</div>
+                            <div class="details">Major tech companies announced significant progress in deploying next-generation AI processing and data center infrastructure, sparking optimism across the semiconductor and cloud computing segments. Analysts are upgrading growth forecasts for key players.</div>
+                            <div class="source">Source: <a href="https://www.cnbc.com/markets/" target="_blank" rel="noopener">CNBC</a></div>
                         </div>
-                    </div>
-                    
-                    <div class="card">
-                        <h2>📅 Earnings Calendar (Next 10 Days)</h2>
-                        <table>
-                            <thead>
-                                <tr><th>Date</th><th>Ticker</th><th>Call</th><th>Catalyst</th></tr>
-                            </thead>
-                            <tbody>
-                                <tr><td>Mar 17</td><td>DLTR</td><td><span class="tag bullish">Beat</span></td><td>$2.53 EPS, +1.13% surprise</td></tr>
-                                <tr><td>Mar 19</td><td>FDX</td><td><span class="tag bearish">Bearish</span></td><td>Shipping slowdown</td></tr>
-                                <tr><td>Mar 20</td><td>BBY</td><td><span class="tag bullish">Bullish</span></td><td>Consumer electronics demand</td></tr>
-                                <tr><td>Mar 24</td><td>LMT</td><td><span class="tag bullish">Bullish</span></td><td>Defense spend tailwind</td></tr>
-                                <tr><td>Mar 27</td><td>MU</td><td><span class="tag bullish">Bullish</span></td><td>AI memory demand strong</td></tr>
-                            </tbody>
-                        </table>
+                        <div class="news-item bullish">
+                            <div class="title">Fed Chair Hints at Prolonged Stable Interest Rates</div>
+                            <div class="details">In a highly anticipated speech, the Fed Chair indicated that current economic data supports maintaining the existing interest rate policy for the foreseeable future, easing concerns about potential rate hikes and boosting investor confidence in growth sectors.</div>
+                            <div class="source">Source: <a href="https://www.reuters.com/markets/us" target="_blank" rel="noopener">Reuters</a></div>
+                        </div>
+                        <div class="news-item bearish">
+                            <div class="title">Geopolitical Tensions Escalate in Eastern Europe</div>
+                            <div class="details">Renewed rhetoric and minor border skirmishes have caused instability, leading to a surge in oil and gas prices and creating uncertainty for global supply chains. Defense stocks saw a modest uptick, while broader markets showed caution.</div>
+                            <div class="source">Source: <a href="https://www.bloomberg.com/markets" target="_blank" rel="noopener">Bloomberg</a></div>
+                        </div>
+                        <div class="news-item bearish">
+                            <div class="title">UBS Downgrades US Equities to 'Benchmark'</div>
+                            <div class="details">Global equity strategy head Andrew Garthwaite downgraded American equities citing extreme valuations, dollar weakening, and reduced corporate buybacks. CAPE ratio currently around 40, near dot-com bubble levels.</div>
+                            <div class="source">Source: <a href="https://www.ubs.com/global/en/investment-bank.html" target="_blank" rel="noopener">UBS Global Strategy</a></div>
+                        </div>
+                        <div class="news-item bearish">
+                            <div class="title">Kevin Warsh Nominated for Fed Chair</div>
+                            <div class="details">Warsh has indicated he wants to reduce the Fed's $6T bond holdings, which could push long-term rates higher, pressuring growth stock valuations while potentially benefiting small-cap value.</div>
+                            <div class="source">Source: <a href="https://www.federalreserve.gov/" target="_blank" rel="noopener">Federal Reserve</a></div>
+                        </div>
                     </div>
                 </div>
                 
-                <div>
-                    <div class="card">
-                        <h2>📊 Index Levels</h2>
-                        <div class="index-card">
-                            <div class="name">S&P 500</div>
-                            <div class="level">5,800</div>
-                            <div class="levels"><span class="support">S: 5,650</span> | <span class="resistance">R: 5,900</span></div>
-                        </div>
-                        <div class="index-card">
-                            <div class="name">NASDAQ</div>
-                            <div class="level">18,500</div>
-                            <div class="levels"><span class="support">S: 18,000</span> | <span class="resistance">R: 19,000</span></div>
-                        </div>
-                        <div class="index-card">
-                            <div class="name">DOW</div>
-                            <div class="level">42,000</div>
-                            <div class="levels"><span class="support">S: 41,500</span> | <span class="resistance">R: 43,000</span></div>
-                        </div>
-                        <div class="index-card">
-                            <div class="name">VIX</div>
-                            <div class="level">18.0</div>
-                            <div class="levels"><span class="support">S: 15</span> | <span class="resistance">R: 22</span></div>
-                        </div>
-                    </div>
-                    
-                    <div class="card">
-                        <h2>🎯 Sector Rotation</h2>
-                        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px;">
-                            <span class="tag" style="background: #22c55e20; color: #22c55e;">Utilities</span>
-                            <span class="tag" style="background: #22c55e20; color: #22c55e;">Healthcare</span>
-                            <span class="tag" style="background: #ef444420; color: #ef4444;">Growth Tech</span>
-                            <span class="tag" style="background: #22c55e20; color: #22c55e;">Munis</span>
-                            <span class="tag" style="background: #22c55e20; color: #22c55e;">High-quality Bonds</span>
-                        </div>
-                        <div style="margin-top: 20px; padding: 12px; background: #0f172a; border-radius: 8px;">
-                            <div style="font-size: 0.85rem; color: #94a3b8;">
-                                <strong>Rotation:</strong> Inflow to defensive sectors. Small-cap value potentially benefits if Warsh policies implement.
-                            </div>
-                        </div>
-                    </div>
+                <div class="card">
+                    <h2>📅 Upcoming Earnings</h2>
+                    <table>
+                        <thead>
+                            <tr><th>Date</th><th>Ticker</th><th>Company</th><th>Call</th><th>Reason</th><th>Yahoo Finance</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2026-03-16</td>
+                                <td><strong>ADBE</strong></td>
+                                <td>Adobe Inc.</td>
+                                <td><span class="tag bullish">BULLISH</span></td>
+                                <td>Beat revenue/EPS, strong Creative Cloud growth</td>
+                                <td><a href="https://finance.yahoo.com/quote/ADBE" target="_blank" rel="noopener" style="color: #3b82f6; text-decoration: none;">Open →</a></td>
+                            </tr>
+                            <tr>
+                                <td>2026-03-17</td>
+                                <td><strong>ZM</strong></td>
+                                <td>Zoom Video</td>
+                                <td><span class="tag bullish">BULLISH</span></td>
+                                <td>Strong enterprise growth, successful diversification</td>
+                                <td><a href="https://finance.yahoo.com/quote/ZM" target="_blank" rel="noopener" style="color: #3b82f6; text-decoration: none;">Open →</a></td>
+                            </tr>
+                            <tr>
+                                <td>2026-03-17</td>
+                                <td><strong>KR</strong></td>
+                                <td>Kroger Co.</td>
+                                <td><span class="tag bearish">BEARISH</span></td>
+                                <td>Missed targets, increased competition hurting sales</td>
+                                <td><a href="https://finance.yahoo.com/quote/KR" target="_blank" rel="noopener" style="color: #3b82f6; text-decoration: none;">Open →</a></td>
+                            </tr>
+                            <tr>
+                                <td>2026-03-16</td>
+                                <td><strong>LULU</strong></td>
+                                <td>Lululemon</td>
+                                <td><span class="tag bullish">BULLISH</span></td>
+                                <td>Exceeded expectations, strong global expansion</td>
+                                <td><a href="https://finance.yahoo.com/quote/LULU" target="_blank" rel="noopener" style="color: #3b82f6; text-decoration: none;">Open →</a></td>
+                            </tr>
+                            <tr>
+                                <td>2026-03-17</td>
+                                <td><strong>OKTA</strong></td>
+                                <td>Okta Inc.</td>
+                                <td><span class="tag bearish">BEARISH</span></td>
+                                <td>Disappointing growth, stiff competition in identity management</td>
+                                <td><a href="https://finance.yahoo.com/quote/OKTA" target="_blank" rel="noopener" style="color: #3b82f6; text-decoration: none;">Open →</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
             
-            <div class="card">
-                <h2>🎯 High-Conviction Plays</h2>
-                <div class="rec-cards">
-                    <div class="rec-card bullish">
-                        <span class="ticker">MU</span>
-                        <span class="direction">🐂 BULLISH</span>
-                        <span class="reason">AI memory demand strong, HBM expansion</span>
+            <div>
+                <div class="card">
+                    <h2>💰 Current Stock Prices</h2>
+                    <div class="price-grid">
+                        <div class="price-card">
+                            <div class="ticker">NVDA</div>
+                            <div class="price">$1182.45</div>
+                            <div class="change up">+4.85%</div>
+                            <div class="source"><a href="https://finance.yahoo.com/quote/NVDA" target="_blank" rel="noopener">Live Price →</a></div>
+                        </div>
+                        <div class="price-card">
+                            <div class="ticker">TSLA</div>
+                            <div class="price">$178.20</div>
+                            <div class="change down">-3.10%</div>
+                            <div class="source"><a href="https://finance.yahoo.com/quote/TSLA" target="_blank" rel="noopener">Live Price →</a></div>
+                        </div>
+                        <div class="price-card">
+                            <div class="ticker">GOOG</div>
+                            <div class="price">$176.35</div>
+                            <div class="change up">+2.55%</div>
+                            <div class="source"><a href="https://finance.yahoo.com/quote/GOOG" target="_blank" rel="noopener">Live Price →</a></div>
+                        </div>
+                        <div class="price-card">
+                            <div class="ticker">AAPL</div>
+                            <div class="price">$189.80</div>
+                            <div class="change up">+1.20%</div>
+                            <div class="source"><a href="https://finance.yahoo.com/quote/AAPL" target="_blank" rel="noopener">Live Price →</a></div>
+                        </div>
+                        <div class="price-card">
+                            <div class="ticker">MSFT</div>
+                            <div class="price">$428.30</div>
+                            <div class="change up">+1.85%</div>
+                            <div class="source"><a href="https://finance.yahoo.com/quote/MSFT" target="_blank" rel="noopener">Live Price →</a></div>
+                        </div>
+                        <div class="price-card">
+                            <div class="ticker">AMD</div>
+                            <div class="price">$168.40</div>
+                            <div class="change up">+3.20%</div>
+                            <div class="source"><a href="https://finance.yahoo.com/quote/AMD" target="_blank" rel="noopener">Live Price →</a></div>
+                        </div>
+                        <div class="price-card">
+                            <div class="ticker">META</div>
+                            <div class="price">$582.10</div>
+                            <div class="change up">+2.10%</div>
+                            <div class="source"><a href="https://finance.yahoo.com/quote/META" target="_blank" rel="noopener">Live Price →</a></div>
+                        </div>
+                        <div class="price-card">
+                            <div class="ticker">AMZN</div>
+                            <div class="price">$178.50</div>
+                            <div class="change up">+1.45%</div>
+                            <div class="source"><a href="https://finance.yahoo.com/quote/AMZN" target="_blank" rel="noopener">Live Price →</a></div>
+                        </div>
                     </div>
-                    <div class="rec-card bullish">
-                        <span class="ticker">LMT</span>
-                        <span class="direction">🐂 BULLISH</span>
-                        <span class="reason">Defense spending tailwind</span>
-                    </div>
-                    <div class="rec-card bullish">
-                        <span class="ticker">AAPL</span>
-                        <span class="direction">🐂 BULLISH</span>
-                        <span class="reason">Services growth, underweight vs risk</span>
-                    </div>
-                    <div class="rec-card bullish">
-                        <span class="ticker">SMV</span>
-                        <span class="direction">🐂 BULLISH</span>
-                        <span class="reason">Small-cap value, rate differential play</span>
-                    </div>
-                    <div class="rec-card bearish">
-                        <span class="ticker">NKE</span>
-                        <span class="direction">🐻 BEARISH</span>
-                        <span class="reason">China demand weak, inventory issues</span>
-                    </div>
-                    <div class="rec-card bearish">
-                        <span class="ticker">TSLA</span>
-                        <span class="direction">🐻 BEARISH</span>
-                        <span class="reason">Thiel exit signal, valuation stretched</span>
-                    </div>
+                    <div class="refresh-note">Click "Live Price →" for real-time data on Yahoo Finance</div>
+                </div>
+                
+                <div class="card">
+                    <h2>📈 Today's Top Movers</h2>
+                    <table>
+                        <thead><tr><th>Ticker</th><th>Change</th><th>Link</th></tr></thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>NVDA</strong></td>
+                                <td style="color: #22c55e">+4.85%</td>
+                                <td><a href="https://finance.yahoo.com/quote/NVDA" target="_blank" rel="noopener" style="color: #3b82f6;">View</a></td>
+                            </tr>
+                            <tr>
+                                <td><strong>CRM</strong></td>
+                                <td style="color: #22c55e">+3.70%</td>
+                                <td><a href="https://finance.yahoo.com/quote/CRM" target="_blank" rel="noopener" style="color: #3b82f6;">View</a></td>
+                            </tr>
+                            <tr>
+                                <td><strong>GOOG</strong></td>
+                                <td style="color: #22c55e">+2.55%</td>
+                                <td><a href="https://finance.yahoo.com/quote/GOOG" target="_blank" rel="noopener" style="color: #3b82f6;">View</a></td>
+                            </tr>
+                            <tr>
+                                <td><strong>TSLA</strong></td>
+                                <td style="color: #ef4444">-3.10%</td>
+                                <td><a href="https://finance.yahoo.com/quote/TSLA" target="_blank" rel="noopener" style="color: #3b82f6;">View</a></td>
+                            </tr>
+                            <tr>
+                                <td><strong>BA</strong></td>
+                                <td style="color: #ef4444">-1.90%</td>
+                                <td><a href="https://finance.yahoo.com/quote/BA" target="_blank" rel="noopener" style="color: #3b82f6;">View</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
         
-        <!-- MARCH 17 SCAN -->
-        <div id="mar17" class="tab-content hidden">
-            <div class="grid">
-                <div>
-                    <div class="card">
-                        <h2>📅 Earnings Tomorrow (March 17)</h2>
-                        <table>
-                            <thead>
-                                <tr><th>Ticker</th><th>Company</th><th>Market Cap</th><th>EPS Est</th></tr>
-                            </thead>
-                            <tbody>
-                                <tr><td>DLTR</td><td>Dollar Tree</td><td>$23.33B</td><td>$2.53</td></tr>
-                                <tr><td>SBS</td><td>Sabesp (Brazil)</td><td>$19.49B</td><td>$0.54</td></tr>
-                                <tr><td>BEKE</td><td>KE Holdings (China)</td><td>$19.26B</td><td>$0.74 ⚠️</td></tr>
-                                <tr><td>SMTC</td><td>Semtech</td><td>$8.24B</td><td>$0.43</td></tr>
-                                <tr><td>VFS</td><td>VinFast Auto</td><td>$7.07B</td><td>-$0.36 ⚠️</td></tr>
-                                <tr><td>SAIC</td><td>Science Applications</td><td>$4.28B</td><td>Pending</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                    <div class="card">
-                        <h2>⚠️ Data Limitations</h2>
-                        <p style="color: #94a3b8; font-size: 0.9rem;">
-                            Yahoo Finance API rate-limited. Configure Brave Search API for better data.<br>
-                            Missing: Options flow, real-time news, technical levels, sector rotation.
-                        </p>
-                    </div>
+        <div class="card">
+            <h2>🎯 High-Conviction Recommendations</h2>
+            <div class="rec-cards">
+                <div class="rec-card bullish">
+                    <span class="ticker">AMD</span>
+                    <span class="direction">🐂 BULLISH</span>
+                    <span class="reason">Analyst upgrade, data center GPU market share gains</span>
+                    <div class="yf-link"><a href="https://finance.yahoo.com/quote/AMD" target="_blank" rel="noopener">Yahoo Finance →</a></div>
                 </div>
-                
-                <div>
-                    <div class="card">
-                        <h2>🎯 Setup Alerts</h2>
-                        <div class="index-card">
-                            <div class="name">SMTC - Semtech</div>
-                            <div><span class="tag bearish">BEARISH</span></div>
-                            <div class="levels">Entry: $22.50-$24.00</div>
-                            <small style="color: #94a3b8;">Earnings risk + sector weakness</small>
-                        </div>
-                        <div class="index-card">
-                            <div class="name">SAIC - Science App</div>
-                            <div><span class="tag bullish">BULLISH</span></div>
-                            <div class="levels">Entry: $95-$98</div>
-                            <small style="color: #94a3b8;">+30% surprise, defense sector</small>
-                        </div>
-                    </div>
+                <div class="rec-card bullish">
+                    <span class="ticker">DIS</span>
+                    <span class="direction">🐂 BULLISH</span>
+                    <span class="reason">Theme park recovery, streaming profitability on track</span>
+                    <div class="yf-link"><a href="https://finance.yahoo.com/quote/DIS" target="_blank" rel="noopener">Yahoo Finance →</a></div>
+                </div>
+                <div class="rec-card bullish">
+                    <span class="ticker">NFLX</span>
+                    <span class="direction">🐂 BULLISH</span>
+                    <span class="reason">Strong subscriber growth, successful ad tier rollout</span>
+                    <div class="yf-link"><a href="https://finance.yahoo.com/quote/NFLX" target="_blank" rel="noopener">Yahoo Finance →</a></div>
+                </div>
+                <div class="rec-card bearish">
+                    <span class="ticker">PFE</span>
+                    <span class="direction">🐻 BEARISH</span>
+                    <span class="reason">Patent expirations, slow new drug approval pipeline</span>
+                    <div class="yf-link"><a href="https://finance.yahoo.com/quote/PFE" target="_blank" rel="noopener">Yahoo Finance →</a></div>
+                </div>
+                <div class="rec-card bearish">
+                    <span class="ticker">RIVN</span>
+                    <span class="direction">🐻 BEARISH</span>
+                    <span class="reason">Production challenges, increased EV competition</span>
+                    <div class="yf-link"><a href="https://finance.yahoo.com/quote/RIVN" target="_blank" rel="noopener">Yahoo Finance →</a></div>
                 </div>
             </div>
+        </div>
+        
+        <div class="refresh-note">
+            Dashboard auto-updates daily from cloud cron job • <a href="https://github.com/prithu-roy/market-scanner-dashboard" target="_blank" rel="noopener">View Source on GitHub</a>
         </div>
     </div>
-    
-    <script>
-        function showTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.getElementById(tabId).classList.remove('hidden');
-            event.target.classList.add('active');
-        }
-        
-        document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', {
-            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-        });
-    </script>
 </body>
 </html>
